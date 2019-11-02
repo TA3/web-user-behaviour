@@ -1,5 +1,5 @@
 <h3 align="center">User Behaviour Tracking</h3>
-<h4 align="center">8.0 KB</h4>
+<h4 align="center">4.0 KB</h4>
 
 <div align="center">
 
@@ -39,14 +39,14 @@ There are two ways to include userBehaviour.js  to your browser:
 1. jsDelivr CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/TA3/web-user-behaviour@1.0/userBehaviour.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/TA3/web-user-behaviour@1.0/userBehaviour.min.js"></script>
 ```
 2. Local file
 ```html
 <script src="/path/to/userBehaviour.js"></script>
 ```
 
-## Configuration <a name = "config"></a>
+## 🔧 Configuration <a name = "config"></a>
 The library requires a configuration object. Pass the object to the library with:
 
 ```javascript
