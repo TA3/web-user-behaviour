@@ -53,7 +53,7 @@ The library requires a configuration object. Pass the object to the library with
 userBehaviour.config({.....});
 ```
 If no configuration was passes the libray will use the default configuration:
-```json
+```javascript
 {
     clicks: true,
     mouseMovement: true,
