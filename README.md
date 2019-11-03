@@ -1,5 +1,5 @@
 <h3 align="center">User Behaviour Tracking</h3>
-<h4 align="center">4.0 KB</h4>
+<h4 align="center">2.7 KB</h4>
 
 <div align="center">
 
@@ -20,6 +20,7 @@
 - [About](#about)
 - [Installation](#install)
 - [Configuration](#config)
+- [Methods](#methods)
 - [Tracking](#tracking)
 - [Results](#results)
 
@@ -55,6 +56,7 @@ userBehaviour.config({.....});
 If no configuration was passes the libray will use the default configuration:
 ```javascript
 {
+    userInfo: true,
     clicks: true,
     mouseMovement: true,
     mouseMovementInterval: 1,
@@ -67,18 +69,30 @@ If no configuration was passes the libray will use the default configuration:
     },
 }
 ```
-| Config Key            | Description                                                                                        | Type               | Default |   |   |
-|-----------------------|----------------------------------------------------------------------------------------------------|--------------------|---------|---|---|
-| clicks                | track mouse clicks                                                                                 | bool               | true    |   |   |
-| mouseMovement         | track mouse movement                                                                               | bool               | true    |   |   |
-| mouseMovementInterval | time between tracking mouse movements                                                              | int (seconds)      | 1       |   |   |
-| mouseScroll           | track mouse scroll                                                                                 | bool               | true    |   |   |
-| timeCount             | track time                                                                                         | bool               | true    |   |   |
-| clearAfterProcess     | clear results object after processing the data                                                     | bool               | true    |   |   |
-| processTime           | time between processing the data automatically <br>(false will enable manual only data processing) | int/bool (seconds) | 15      |   |   |
-| processData           | function that processes the results object                                                         | function           | ...     |   |   |
+| Config Key            | Description                                                                                        | Type               | Default |
+|-----------------------|----------------------------------------------------------------------------------------------------|--------------------|---------|
+| userInfo              | record browser/device details                                                                      | bool               | true    |
+| clicks                | track mouse clicks                                                                                 | bool               | true    |
+| mouseMovement         | track mouse movement                                                                               | bool               | true    |
+| mouseMovementInterval | time between tracking mouse movements                                                              | int (seconds)      | 1       |
+| mouseScroll           | track mouse scroll                                                                                 | bool               | true    |
+| timeCount             | track time                                                                                         | bool               | true    |
+| clearAfterProcess     | clear results object after processing the data                                                     | bool               | true    |
+| processTime           | time between processing the data automatically <br>(false will enable manual only data processing) | int/bool (seconds) | 15      |
+| processData           | function that processes the results object                                                         | function           | ...     |
 
+## 📚 Methods <a name="methods"></a>
 
+This is  a list of all available methods that can be called:
+
+| Method         | Description                              | Example                             |
+|----------------|------------------------------------------|-------------------------------------|
+| showConfig     | returns current config                   | userBehaviour.showConfig()          |
+| config         | sets the configuration                   | userBehaviour.config(config_object) |
+| start          | starts tracking                          | userBehaviour.start()               |
+| stop           | stops tracking                           | userBehaviour.stop()                |
+| showResult     | returns current result                   | userBehaviour.showResult()          |
+| processResults | calls the process function set in config | userBehaviour.processResults()      |
 
 ## 🚀 Tracking <a name = "tracking"></a>
 

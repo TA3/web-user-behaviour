@@ -1,5 +1,10 @@
+/**
+ * @author Taha Al-Jody <taha@ta3design.com>
+ * https://github.com/TA3/web-user-behaviour
+ */
 var userBehaviour = (function(){
     var defaults = {
+        userInfo: true,
         clicks: true,
         mouseMovement: true,
         mouseMovementInterval: 1,
@@ -113,15 +118,15 @@ var userBehaviour = (function(){
         //PROCESS INTERVAL
         if(user_config.processTime !== false){
             mem.processInterval = setInterval(()=>{
-                user_config.processData(results);
-                if (user_config.clearAfterProcess) {
-                    resetResults();
-                }
+                user_config.processData(result());
             },user_config.processTime*1000)
         }
     };
     function processResults(){
-        user_config.processData(results);
+        user_config.processData(result());
+        if (user_config.clearAfterProcess) {
+            resetResults();
+        }
     }
     function stop(){
         if(user_config.processTime !== false){
@@ -133,13 +138,24 @@ var userBehaviour = (function(){
         window.removeEventListener("mousemove", mem.eventsFunctions.mouseMovement);
     }
     function result(){
+        if (user_config.userInfo === false && userBehaviour.showResult().userInfo !== undefined) {
+            delete userBehaviour.showResult().userInfo;
+        }
         if(user_config.time.timeCount !== undefined && user_config.time.timeCount){
             results.time.currentTime = getTimeStamp();
         }
         return results
     };
+    function showConfig(){
+        if (Object.keys(user_config).length !== Object.keys(defaults).length) {
+            return defaults;
+        }
+        else{
+            return user_config;
+        }
+    };
     return {
-        showConfig: user_config,
+        showConfig: showConfig,
         config: config,
         start: start,
         stop: stop,
