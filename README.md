@@ -40,7 +40,7 @@ There are two ways to include userBehaviour.js  to your browser:
 1. jsDelivr CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/TA3/web-user-behaviour@1.0/userBehaviour.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/TA3/web-user-behaviour@1.1/userBehaviour.min.js"></script>
 ```
 2. Local file
 ```html
