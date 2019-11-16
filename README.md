@@ -40,7 +40,7 @@ There are two ways to include userBehaviour.js  to your browser:
 1. jsDelivr CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/TA3/web-user-behaviour@1.1/userBehaviour.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/TA3/web-user-behaviour/userBehaviour.min.js"></script>
 ```
 2. Local file
 ```html
@@ -70,7 +70,7 @@ If no configuration was passes the libray will use the default configuration:
 }
 ```
 | Config Key            | Description                                                                                        | Type               | Default |
-|-----------------------|----------------------------------------------------------------------------------------------------|--------------------|---------|
+| --------------------- | -------------------------------------------------------------------------------------------------- | ------------------ | ------- |
 | userInfo              | record browser/device details                                                                      | bool               | true    |
 | clicks                | track mouse clicks                                                                                 | bool               | true    |
 | mouseMovement         | track mouse movement                                                                               | bool               | true    |
@@ -86,7 +86,7 @@ If no configuration was passes the libray will use the default configuration:
 This is  a list of all available methods that can be called:
 
 | Method         | Description                              | Example                             |
-|----------------|------------------------------------------|-------------------------------------|
+| -------------- | ---------------------------------------- | ----------------------------------- |
 | showConfig     | returns current config                   | userBehaviour.showConfig()          |
 | config         | sets the configuration                   | userBehaviour.config(config_object) |
 | start          | starts tracking                          | userBehaviour.start()               |
