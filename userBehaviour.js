@@ -35,8 +35,8 @@ var userBehaviour = (function () {
                 results.clicks.clickCount++;
                 var path = [];
                 var node = "";
-                e.path.forEach((el, i) => {
-                    if ((i !== e.path.length - 1) && (i !== e.path.length - 2)) {
+                e.composedPath().forEach((el, i) => {
+                    if ((i !== e.composedPath().length - 1) && (i !== e.composedPath().length - 2)) {
                         node = el.localName;
                         (el.className !== "") ? el.classList.forEach((clE) => {
                             node += "." + clE
