@@ -13,6 +13,8 @@ var userBehaviour = (function () {
         timeCount: true,
         clearAfterProcess: true, // todo
         processTime: 15,
+        windowResize: true,
+        visibilitychange: true,
         processData: function (results) {
             console.log(results);
         },
@@ -26,6 +28,8 @@ var userBehaviour = (function () {
             scroll: null,
             click: null,
             mouseMovement: null,
+            windowResize: null,
+            visibilitychange: null
         },
         eventsFunctions: {
             scroll: () => {
@@ -50,6 +54,14 @@ var userBehaviour = (function () {
             },
             mouseMovement: (e) => {
                 mem.mousePosition = [e.clientX, e.clientY, getTimeStamp()];
+            },
+            windowResize: (e) => {
+                results.windowSizes.push([window.innerWidth, window.innerHeight, getTimeStamp()]);
+            },
+            visibilitychange: (e) => {
+                results.visibilitychanges.push([document.visibilityState, getTimeStamp()]);
+                processResults();
+                // stop();
             }
         }
     };
@@ -58,6 +70,7 @@ var userBehaviour = (function () {
     function resetResults() {
         results = {
             userInfo: {
+                windowSize: [window.innerWidth, window.innerHeight],
                 appCodeName: navigator.appCodeName || '',
                 appName: navigator.appName || '',
                 vendor: navigator.vendor || '',
@@ -67,6 +80,7 @@ var userBehaviour = (function () {
             time: { //todo
                 startTime: 0,
                 currentTime: 0,
+                stopTime: 0,
             },
             clicks: {
                 clickCount: 0,
@@ -76,7 +90,8 @@ var userBehaviour = (function () {
             mouseScroll: [],
             contextChange: [], //todo
             //keyLogger: [], //todo
-
+            windowSizes: [],
+            visibilitychanges: [],
         }
     };
     resetResults();
@@ -121,10 +136,20 @@ var userBehaviour = (function () {
         if (user_config.mouseScroll) {
             mem.eventListeners.scroll = window.addEventListener("scroll", mem.eventsFunctions.scroll);
         }
+        //Window sizes
+        if (user_config.windowResize !== false) {
+            // mem.eventsFunctions.windowResize();
+            mem.eventListeners.windowResize = window.addEventListener("resize", mem.eventsFunctions.windowResize);
+        }
+        //Before unload / visibilitychange
+        if (user_config.visibilitychange !== false) {
+            mem.eventListeners.visibilitychange = window.addEventListener("visibilitychange", mem.eventsFunctions.visibilitychange);
+        }
+
         //PROCESS INTERVAL
         if (user_config.processTime !== false) {
             mem.processInterval = setInterval(() => {
-                user_config.processData(result());
+                processResults();
             }, user_config.processTime * 1000)
         }
     };
@@ -144,6 +169,10 @@ var userBehaviour = (function () {
         window.removeEventListener("scroll", mem.eventsFunctions.scroll);
         window.removeEventListener("click", mem.eventsFunctions.click);
         window.removeEventListener("mousemove", mem.eventsFunctions.mouseMovement);
+        window.removeEventListener("resize", mem.eventsFunctions.windowResize);
+        window.removeEventListener("visibilitychange", mem.eventsFunctions.visibilitychange);
+        results.time.stopTime = getTimeStamp();
+        processResults();
     }
 
     function result() {
