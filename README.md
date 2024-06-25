@@ -32,6 +32,8 @@ This Javascript Library allows to track user's behaviour by recording mouse acti
   - Timestamp
 - Scroll
 - Time on page
+- Window Resize
+- Visibility Change
 
 
 ## 🏁 Installation <a name = "install"></a>
@@ -62,6 +64,8 @@ If no configuration was passes the libray will use the default configuration:
     mouseMovementInterval: 1,
     mouseScroll: true,
     timeCount: true,
+    windowResize: true,
+    visibilitychange: true,
     clearAfterProcess: true,
     processTime: 15,
     processData: function(results){
@@ -77,6 +81,8 @@ If no configuration was passes the libray will use the default configuration:
 | mouseMovementInterval | time between tracking mouse movements                                                              | int (seconds)      | 1       |
 | mouseScroll           | track mouse scroll                                                                                 | bool               | true    |
 | timeCount             | track time                                                                                         | bool               | true    |
+| windowResize          | window resize                                                                                      | bool               | true    |
+| visibilitychange      | track visibility of the tab's content                                                              | bool               | true    |
 | clearAfterProcess     | clear results object after processing the data                                                     | bool               | true    |
 | processTime           | time between processing the data automatically <br>(false will enable manual only data processing) | int/bool (seconds) | 15      |
 | processData           | function that processes the results object                                                         | function           | ...     |
