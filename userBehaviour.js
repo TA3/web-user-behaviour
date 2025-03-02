@@ -9,12 +9,17 @@ var userBehaviour = (function () {
         mouseMovement: true,
         mouseMovementInterval: 1,
         mouseScroll: true,
-        mousePageChange: true, //todo
         timeCount: true,
-        clearAfterProcess: true, // todo
+        clearAfterProcess: true,
         processTime: 15,
         windowResize: true,
         visibilitychange: true,
+        keyboardActivity: true,
+        pageNavigation: true,
+        formInteractions: true,
+        touchEvents: true,
+        audioVideoInteraction: true,
+        customEventRegistration: true,
         processData: function (results) {
             console.log(results);
         },
@@ -29,7 +34,9 @@ var userBehaviour = (function () {
             click: null,
             mouseMovement: null,
             windowResize: null,
-            visibilitychange: null
+            visibilitychange: null,
+            keyboardActivity: null,
+            touchStart: null
         },
         eventsFunctions: {
             scroll: () => {
@@ -61,7 +68,23 @@ var userBehaviour = (function () {
             visibilitychange: (e) => {
                 results.visibilitychanges.push([document.visibilityState, getTimeStamp()]);
                 processResults();
-                // stop();
+            },
+            keyboardActivity: (e) => {
+                results.keyboardActivities.push([e.key, getTimeStamp()]);
+            },
+            pageNavigation: () => {
+                results.navigationHistory.push([location.href, getTimeStamp()]);
+            },
+            formInteraction: (e) => {
+                e.preventDefault(); // Prevent the form from submitting normally
+                results.formInteractions.push([e.target.name, getTimeStamp()]);
+                // Optionally, submit the form programmatically after tracking
+            },
+            touchStart: (e) => {
+                results.touchEvents.push(['touchstart', e.touches[0].clientX, e.touches[0].clientY, getTimeStamp()]);
+            },
+            mediaInteraction: (e) => {
+                results.mediaInteractions.push(['play', e.target.currentSrc, getTimeStamp()]);
             }
         }
     };
@@ -77,7 +100,7 @@ var userBehaviour = (function () {
                 platform: navigator.platform || '',
                 userAgent: navigator.userAgent || ''
             },
-            time: { //todo
+            time: {
                 startTime: 0,
                 currentTime: 0,
                 stopTime: 0,
@@ -88,11 +111,14 @@ var userBehaviour = (function () {
             },
             mouseMovements: [],
             mouseScroll: [],
-            contextChange: [], //todo
-            //keyLogger: [], //todo
+            keyboardActivities: [],
+            navigationHistory: [],
+            formInteractions: [],
+            touchEvents: [],
+            mediaInteractions: [],
             windowSizes: [],
             visibilitychanges: [],
-        }
+        };
     };
     resetResults();
 
@@ -121,7 +147,7 @@ var userBehaviour = (function () {
         if (user_config.mouseMovement) {
             mem.eventListeners.mouseMovement = window.addEventListener("mousemove", mem.eventsFunctions.mouseMovement);
             mem.mouseInterval = setInterval(() => {
-                if (mem.mousePosition && mem.mousePosition.length) { //if data has been captured
+                if (mem.mousePosition && mem.mousePosition.length) {
                     if (!results.mouseMovements.length || ((mem.mousePosition[0] !== results.mouseMovements[results.mouseMovements.length - 1][0]) && (mem.mousePosition[1] !== results.mouseMovements[results.mouseMovements.length - 1][1]))) {
                         results.mouseMovements.push(mem.mousePosition)
                     }
@@ -138,12 +164,43 @@ var userBehaviour = (function () {
         }
         //Window sizes
         if (user_config.windowResize !== false) {
-            // mem.eventsFunctions.windowResize();
             mem.eventListeners.windowResize = window.addEventListener("resize", mem.eventsFunctions.windowResize);
         }
         //Before unload / visibilitychange
         if (user_config.visibilitychange !== false) {
             mem.eventListeners.visibilitychange = window.addEventListener("visibilitychange", mem.eventsFunctions.visibilitychange);
+        }
+        //Keyboard Activity
+        if (user_config.keyboardActivity) {
+            mem.eventListeners.keyboardActivity = window.addEventListener("keydown", mem.eventsFunctions.keyboardActivity);
+        }
+        //Page Navigation
+        if (user_config.pageNavigation) {
+            window.history.pushState = (f => function pushState() {
+                var ret = f.apply(this, arguments);
+                window.dispatchEvent(new Event('pushstate'));
+                window.dispatchEvent(new Event('locationchange'));
+                return ret;
+            })(window.history.pushState);
+            
+            window.addEventListener('popstate', mem.eventsFunctions.pageNavigation);
+            window.addEventListener('pushstate', mem.eventsFunctions.pageNavigation);
+            window.addEventListener('locationchange', mem.eventsFunctions.pageNavigation);
+        }
+        //Form Interactions
+        if (user_config.formInteractions) {
+            document.querySelectorAll('form').forEach(form => form.addEventListener('submit', mem.eventsFunctions.formInteraction));
+        }
+        //Touch Events
+        if (user_config.touchEvents) {
+            mem.eventListeners.touchStart = window.addEventListener("touchstart", mem.eventsFunctions.touchStart);
+        }
+        //Audio & Video Interaction
+        if (user_config.audioVideoInteraction) {
+            document.querySelectorAll('video').forEach(video => {
+                video.addEventListener('play', mem.eventsFunctions.mediaInteraction);
+                // Add other media events as needed
+            });
         }
 
         //PROCESS INTERVAL
@@ -171,6 +228,8 @@ var userBehaviour = (function () {
         window.removeEventListener("mousemove", mem.eventsFunctions.mouseMovement);
         window.removeEventListener("resize", mem.eventsFunctions.windowResize);
         window.removeEventListener("visibilitychange", mem.eventsFunctions.visibilitychange);
+        window.removeEventListener("keydown", mem.eventsFunctions.keyboardActivity);
+        window.removeEventListener("touchstart", mem.eventsFunctions.touchStart);
         results.time.stopTime = getTimeStamp();
         processResults();
     }
@@ -192,6 +251,7 @@ var userBehaviour = (function () {
             return user_config;
         }
     };
+    
     return {
         showConfig: showConfig,
         config: config,
@@ -199,6 +259,9 @@ var userBehaviour = (function () {
         stop: stop,
         showResult: result,
         processResults: processResults,
+        registerCustomEvent: (eventName, callback) => {
+            window.addEventListener(eventName, callback);
+        },
     };
 
 })();
