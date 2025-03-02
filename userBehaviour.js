@@ -1,5 +1,5 @@
 /**
- * @author Taha Al-Jody <taha@ta3design.com>
+ * @author Taha Al-Jody <taha@ta3.dev>
  * https://github.com/TA3/web-user-behaviour
  */
 var userBehaviour = (function () {
