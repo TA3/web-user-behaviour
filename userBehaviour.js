@@ -76,9 +76,7 @@ var userBehaviour = (function () {
                 results.navigationHistory.push([location.href, getTimeStamp()]);
             },
             formInteraction: (e) => {
-                e.preventDefault(); // Prevent the form from submitting normally
                 results.formInteractions.push([e.target.name, getTimeStamp()]);
-                // Optionally, submit the form programmatically after tracking
             },
             touchStart: (e) => {
                 results.touchEvents.push(['touchstart', e.touches[0].clientX, e.touches[0].clientY, getTimeStamp()]);
@@ -152,7 +150,7 @@ var userBehaviour = (function () {
                         results.mouseMovements.push(mem.mousePosition)
                     }
                 }
-            }, defaults.mouseMovementInterval * 1000);
+            }, user_config.mouseMovementInterval * 1000);
         }
         //CLICKS
         if (user_config.clicks) {
@@ -235,8 +233,8 @@ var userBehaviour = (function () {
     }
 
     function result() {
-        if (user_config.userInfo === false && userBehaviour.showResult().userInfo !== undefined) {
-            delete userBehaviour.showResult().userInfo;
+        if (user_config.userInfo === false && results.userInfo !== undefined) {
+            delete results.userInfo;
         }
         if (user_config.timeCount !== undefined && user_config.timeCount) {
             results.time.currentTime = getTimeStamp();
