@@ -15,6 +15,8 @@ var userBehaviour = (function () {
         windowResize: true,
         visibilitychange: true,
         keyboardActivity: true,
+        sensitiveInputs: 'input[type="password"], [autocomplete*="cc-"], [autocomplete="one-time-code"], [data-ub-ignore]',
+        keyCategoryOnly: false,
         pageNavigation: true,
         formInteractions: true,
         touchEvents: true,
@@ -70,7 +72,10 @@ var userBehaviour = (function () {
                 processResults();
             },
             keyboardActivity: (e) => {
-                results.keyboardActivities.push([e.key, getTimeStamp()]);
+                if (user_config.sensitiveInputs && e.target.closest && e.target.closest(user_config.sensitiveInputs)) {
+                    return;
+                }
+                results.keyboardActivities.push([user_config.keyCategoryOnly ? getKeyCategory(e.key) : e.key, getTimeStamp()]);
             },
             pageNavigation: () => {
                 results.navigationHistory.push([location.href, getTimeStamp()]);
@@ -122,6 +127,15 @@ var userBehaviour = (function () {
 
     function getTimeStamp() {
         return Date.now();
+    };
+
+    function getKeyCategory(key) {
+        // named keys (Enter, Backspace, ArrowLeft...) don't reveal what was typed
+        if (typeof key !== "string" || Array.from(key).length !== 1) return key;
+        if (/\d/.test(key)) return "digit";
+        if (/\s/.test(key)) return "space";
+        if (/\p{L}/u.test(key)) return "letter";
+        return "symbol";
     };
 
     function config(ob) {

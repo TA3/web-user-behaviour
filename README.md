@@ -75,6 +75,8 @@ If no configuration was passes the libray will use the default configuration:
     windowResize: true,
     visibilitychange: true,
     keyboardActivity: true,
+    sensitiveInputs: 'input[type="password"], [autocomplete*="cc-"], [autocomplete="one-time-code"], [data-ub-ignore]',
+    keyCategoryOnly: false,
     pageNavigation: true,
     formInteractions: true,
     touchEvents: true,
@@ -98,6 +100,8 @@ If no configuration was passes the libray will use the default configuration:
 | windowResize            | Track window size changes                                       | bool     | true    |
 | visibilitychange        | Track tab visibility changes                                    | bool     | true    |
 | keyboardActivity        | Track keyboard input                                            | bool     | true    |
+| sensitiveInputs         | CSS selector for fields whose keystrokes are never recorded - false to record all | string/bool | password, card, one-time-code and `[data-ub-ignore]` fields |
+| keyCategoryOnly         | Record the key type (letter, digit, space, symbol) instead of the actual key | bool | false |
 | pageNavigation          | Track history changes (pushState/popState)                      | bool     | true    |
 | formInteractions        | Track form submissions                                          | bool     | true    |
 | touchEvents             | Track touch interactions                                        | bool     | true    |
@@ -134,6 +138,20 @@ Track custom events:
 ```javascript
 userBehaviour.registerCustomEvent("surveyCompleted", (e) => {
   console.log("Survey completed:", e.detail);
+});
+```
+
+By default, keystrokes typed in password, card number and one-time-code fields are not recorded. To exclude other fields, add `data-ub-ignore` to them or to any parent element:
+
+```html
+<input name="address" data-ub-ignore>
+```
+
+Or pass your own selector. It replaces the default one, so include it if you still want those fields excluded:
+
+```javascript
+userBehaviour.config({
+  sensitiveInputs: 'input[type="password"], [autocomplete*="cc-"], [autocomplete="one-time-code"], [data-ub-ignore], .private',
 });
 ```
 
